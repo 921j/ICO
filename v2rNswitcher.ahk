@@ -45,7 +45,7 @@ EnvGet, COMMANDER_PATH, COMMANDER_PATH
 
 
 ; 隐藏指定程序托盘图标
-HideTrayApps := ["DeskPins.exe","Quicker.exe","Listary.exe"]
+HideTrayApps := ["DeskPins.exe","Quicker.exe","Listary.exe"]  ；这里加入想隐藏托盘图标的进程名称
 for Index, tIcon in HideTrayApps
   {
     hideIcon := TrayIcon_GetInfo(tIcon)
@@ -55,7 +55,7 @@ for Index, tIcon in HideTrayApps
 
 
 ;截屏键
-PrintScreen::Run %ComSpec% /c ""D:\Program Files\eZ IMG\FSCapture\FSCLoader.exe" "Ctrl+PrtSC"",,Hide
+PrintScreen::Run %ComSpec% /c ""D:\Program Files\eZ IMG\FSCapture\FSCLoader.exe" "Ctrl+PrtSC"",,Hide  ；修改为自己本地 FSCLoader.exe 程序的路劲
 Return
 
 
@@ -108,7 +108,7 @@ Tip(s:="") {
 			ControlGetFocus, FocussedItem, ahk_class WindowsForms10.SysListView32.app.0.12ab327_r6_ad1
 			send, ^a
 			send, ^t
-			sleep 3000
+			sleep 3000  ；从测速到开始检测之间的时间间隔，若节点较多可适当加大
 			oAcc := Acc_Get("Object", "4.3.4.1.4.1.4.1.4.1.4.1.4", 0, "ahk_id " hWnd)
 			Start:
 			Loop
@@ -119,7 +119,7 @@ Tip(s:="") {
 					Break
 				else if (Sift_Regex(result, "测速中","OC") != "") {
 				  ;MsgBox % Sift_Regex(result, "测速中","OC")
-					sleep 1000
+					sleep 1000  ；检测到还在测速中的节点则重新开始循环，可适当调大避免检测太频繁
 				  goto Start
 				}
 				else if (Sift_Regex(result, "\d+\.\d\s+M\/s$","REGEX") != ""){
