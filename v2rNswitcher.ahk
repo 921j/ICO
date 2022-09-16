@@ -55,7 +55,7 @@ for Index, tIcon in HideTrayApps
 
 
 ;截屏键
-PrintScreen::Run %ComSpec% /c ""D:\Program Files\eZ IMG\FSCapture\FSCLoader.exe" "Ctrl+PrtSC"",,Hide  ；修改为自己本地 FSCLoader.exe 程序的路劲
+PrintScreen::Run %ComSpec% /c ""D:\Program Files\eZ IMG\FSCapture\FSCLoader.exe" "Ctrl+PrtSC"",,Hide  ；修改为自己本地 FSCLoader.exe 程序的路径
 Return
 
 
