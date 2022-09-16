@@ -1,4 +1,5 @@
 ﻿; 作者 -Z-
+ ; 日期 2022.9.16
 ; 获取权限
 Loop, %0% ; For each parameter:
   {
