@@ -135,8 +135,7 @@ Tip(s:="") {
         result .= oAcc.accDescription(A_Index)
         if (Sift_Regex(result, "\d+\.\d\s+M\/s$","REGEX") != ""){
 					result1 := Sift_Regex(result, "\d+\.\d\s+M\/s$","REGEX")
-					RegExMatch(result1, "\d+\.\d\s+M\/s$", vspeed)
-					RegExMatch(vspeed, "\d+\.\d", vnumb)
+					RegExMatch(result1, "\d+\.\d(?=\s+M\/s$)", vnumb)
 					if (vnumb > maxv){
 						maxv := vnumb
 						maxi := A_Index
