@@ -1,5 +1,5 @@
 ﻿; 作者 -Z-
-; 日期 2022.9.16
+; 日期 2022.9.19
 ；地址：https://github.com/921j/ICO/blob/main/v2rNswitcher.ahk
 ；引用、转载、修改时请勿去掉源地址，谢谢！
 ; 获取权限
@@ -109,21 +109,31 @@ Tip(s:="") {
 			send, ^a
 			send, ^t
 			sleep 3000  ；从测速到开始检测之间的时间间隔，若节点较多可适当加大
-			oAcc := Acc_Get("Object", "4.3.4.1.4.1.4.1.4.1.4.1.4", 0, "ahk_id " hWnd)
-			Start:
+			oAcc := Acc_Get("Object", "4.3.4.1.4.1.4.1.4.1.4.1.4", 0, "ahk_id " hWnd)      
 			Loop
-			{
+      {
+        if (oAcc.accName(A_Index) = ""){
+          LastIdx := A_Index - 1
+          ;MsgBox 节点数  %LastIdx%
+          goto WaitRes
+          }
+        }
+      WaitRes:
+      Loop
+      {
         result := ""
-				result .= oAcc.accDescription(A_Index) "`n"
-				if (oAcc.accName(A_Index) = "")
-					Break
-				else if (Sift_Regex(result, "测速中","OC") != "") {
-				  ;MsgBox % Sift_Regex(result, "测速中","OC")
-					sleep 1000  ；检测到还在测速中的节点则重新开始循环，可适当调大避免检测太频繁
-				  goto Start
-				}
-				else if (Sift_Regex(result, "\d+\.\d\s+M\/s$","REGEX") != ""){
-					;MsgBox % Sift_Regex(result, "\d+\.\d\s+M\/s$","REGEX")
+        result .= oAcc.accDescription(LastIdx)
+        if ((Sift_Regex(result, "测试结果","OC") != "") && (Sift_Regex(result, "∞","OC") = "") && (Sift_Regex(result, "测速中","OC") = ""))
+        {
+          goto GetVal
+        }
+      }
+      GetVal:
+      Loop %LastIdx%
+      {
+        result := ""
+        result .= oAcc.accDescription(A_Index)
+        if (Sift_Regex(result, "\d+\.\d\s+M\/s$","REGEX") != ""){
 					result1 := Sift_Regex(result, "\d+\.\d\s+M\/s$","REGEX")
 					RegExMatch(result1, "\d+\.\d\s+M\/s$", vspeed)
 					RegExMatch(vspeed, "\d+\.\d", vnumb)
@@ -133,8 +143,7 @@ Tip(s:="") {
 						}
           ;MsgBox  当前编号:%A_Index%  节点速度:%vnumb% `n选中编号:%maxi%  节点速度:%maxv%
 					}
-        ;MsgBox, % Clipboard := "遍历测速结果：`n`n" result
-			}
+      }
 			Acc_Get("DoAction", "4.3.4.1.4.1.4.1.4.1.4.1.4", maxi, "ahk_id " hWnd)
 			send {enter}
 			oAcc := oRect := ""
