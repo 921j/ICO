@@ -125,6 +125,7 @@ Tip(s:="") {
         result .= oAcc.accDescription(LastIdx)
         if ((Sift_Regex(result, "测试结果","OC") != "") && (Sift_Regex(result, "∞","OC") = "") && (Sift_Regex(result, "测速中","OC") = ""))
         {
+	  sleep 500
           goto GetVal
         }
       }
