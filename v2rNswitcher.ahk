@@ -1,5 +1,5 @@
 ﻿; 作者 -Z-
-; 日期 2022.9.19
+; 日期 2022.9.22
 ；地址：https://github.com/921j/ICO/blob/main/v2rNswitcher.ahk
 ；引用、转载、修改时请勿去掉源地址，谢谢！
 ; 获取权限
@@ -104,28 +104,29 @@ Tip(s:="") {
       Winshow, ahk_class WindowsForms10.Window.8.app.0.12ab327_r6_ad1
       Winactivate, ahk_class WindowsForms10.Window.8.app.0.12ab327_r6_ad1
       WinWaitActive, ahk_class WindowsForms10.Window.8.app.0.12ab327_r6_ad1
-			WinGet, hWnd, ID, A
+			WinGet, hWnd, ID, ahk_class WindowsForms10.Window.8.app.0.12ab327_r6_ad1
 			ControlGetFocus, FocussedItem, ahk_class WindowsForms10.SysListView32.app.0.12ab327_r6_ad1
 			send, ^a
 			send, ^t
-			sleep 3000  ；从测速到开始检测之间的时间间隔，若节点较多可适当加大
-			oAcc := Acc_Get("Object", "4.3.4.1.4.1.4.1.4.1.4.1.4", 0, "ahk_id " hWnd)      
-			Loop
+			sleep 3000
+			oAcc := Acc_Get("Object", "4.3.4.1.4.1.4.1.4.1.4.1.4", 0, "ahk_id " hWnd)
+      Loop
       {
-        if (oAcc.accName(A_Index) = ""){
+        if (oAcc.accName(A_Index) = "")
+				{
           LastIdx := A_Index - 1
           ;MsgBox 节点数  %LastIdx%
           goto WaitRes
-          }
-        }
+				}
+			}
       WaitRes:
       Loop
       {
         result := ""
         result .= oAcc.accDescription(LastIdx)
-        if ((Sift_Regex(result, "测试结果","OC") != "") && (Sift_Regex(result, "∞","OC") = "") && (Sift_Regex(result, "测速中","OC") = ""))
+        if ((Sift_Regex(result, "测试结果","OC") != "") && (Sift_Regex(result, "∞|测速中","REGEX") = ""))
         {
-	  sleep 1000
+					sleep 1000
           goto GetVal
         }
       }
@@ -134,7 +135,8 @@ Tip(s:="") {
       {
         result := ""
         result .= oAcc.accDescription(A_Index)
-        if (Sift_Regex(result, "\d+\.\d\s+M\/s$","REGEX") != ""){
+        if (Sift_Regex(result, "\d+\.\d\s+M\/s$","REGEX") != "")
+				{
 					result1 := Sift_Regex(result, "\d+\.\d\s+M\/s$","REGEX")
 					RegExMatch(result1, "\d+\.\d(?=\s+M\/s$)", vnumb)
 					if (vnumb > maxv){
@@ -142,7 +144,7 @@ Tip(s:="") {
 						maxi := A_Index
 						}
           ;MsgBox  当前编号:%A_Index%  节点速度:%vnumb% `n选中编号:%maxi%  节点速度:%maxv%
-					}
+				}
       }
 			Acc_Get("DoAction", "4.3.4.1.4.1.4.1.4.1.4.1.4", maxi, "ahk_id " hWnd)
 			send {enter}
