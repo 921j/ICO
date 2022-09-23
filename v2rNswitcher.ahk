@@ -1,5 +1,5 @@
 ﻿; 作者 -Z-
-; 日期 2022.9.22
+; 日期 2022.9.24  趋近完善
 ；地址：https://github.com/921j/ICO/blob/main/v2rNswitcher.ahk
 ；引用、转载、修改时请勿去掉源地址，谢谢！
 ; 获取权限
@@ -91,7 +91,10 @@ Tip(s:="") {
 	v2rayNPid = %ErrorLevel%
 	IfWinNotExist, ahk_pid %v2rayNPid%
 	{
-		TrayIcon_Button("v2rayN.exe")
+		Run "D:\zNet\v2rayN-Core\v2rayN.exe",,Hide  ; 这里替换 v2rayN 程序路径
+		sleep 3000
+		MsgBox, 48, , 看起来 v2rayN 并未运行 已为您运行 v2rayN.`n若想继续测速请再按一次 Ctrl+F1., 5
+    return
 	}
 	Else
 	{
@@ -101,15 +104,21 @@ Tip(s:="") {
 		}
 		Else
 		{
-      Winshow, ahk_class WindowsForms10.Window.8.app.0.12ab327_r6_ad1
-      Winactivate, ahk_class WindowsForms10.Window.8.app.0.12ab327_r6_ad1
-      WinWaitActive, ahk_class WindowsForms10.Window.8.app.0.12ab327_r6_ad1
-			WinGet, hWnd, ID, ahk_class WindowsForms10.Window.8.app.0.12ab327_r6_ad1
-			ControlGetFocus, FocussedItem, ahk_class WindowsForms10.SysListView32.app.0.12ab327_r6_ad1
+			v2rayNCls := "ahk_class WindowsForms10.Window.8.app.0.12ab327_r6_ad1"
+      Winshow, % v2rayNCls
+      Winactivate, % v2rayNCls
+      WinWaitActive, % v2rayNCls
+			wingetpos, x, y, w, h, % v2rayNCls  ; 首次启动会自动调整 v2rayN 的窗口位置与尺寸
+			;msgbox, %x%`n%y%`n%w%`n%h%
+			if (%h% != 1088) {
+				WinMove, % v2rayNCls,,842,28,1088,
+			}
+			WinGet, hWnd, ID, % v2rayNCls
+			oAcc := Acc_Get("Object", "4.3.4.1.4.1.4.1.4.1.4.1.4", 0, "ahk_id " hWnd)
+			oAcc.AccDoDefaultAction(1)
 			send, ^a
 			send, ^t
-			sleep 3000
-			oAcc := Acc_Get("Object", "4.3.4.1.4.1.4.1.4.1.4.1.4", 0, "ahk_id " hWnd)
+			sleep 1000
       Loop
       {
         if (oAcc.accName(A_Index) = "")
@@ -126,7 +135,7 @@ Tip(s:="") {
         result .= oAcc.accDescription(LastIdx)
         if ((Sift_Regex(result, "测试结果","OC") != "") && (Sift_Regex(result, "∞|测速中","REGEX") = ""))
         {
-					sleep 1000
+					sleep 2000
           goto GetVal
         }
       }
@@ -142,10 +151,11 @@ Tip(s:="") {
 					if (vnumb > maxv){
 						maxv := vnumb
 						maxi := A_Index
-						}
+					}
           ;MsgBox  当前编号:%A_Index%  节点速度:%vnumb% `n选中编号:%maxi%  节点速度:%maxv%
 				}
       }
+			sleep 200
 			Acc_Get("DoAction", "4.3.4.1.4.1.4.1.4.1.4.1.4", maxi, "ahk_id " hWnd)
 			send {enter}
 			oAcc := oRect := ""
