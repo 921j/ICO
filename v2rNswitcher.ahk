@@ -45,7 +45,7 @@ EnvGet, COMMANDER_PATH, COMMANDER_PATH
 
 
 ; 隐藏指定程序托盘图标
-HideTrayApps := ["DeskPins.exe","Quicker.exe","Listary.exe"]  ；这里加入想隐藏托盘图标的进程名称
+HideTrayApps := ["DeskPins.exe","Quicker.exe","Listary.exe"]  ; 这里加入想隐藏托盘图标的进程名称
 for Index, tIcon in HideTrayApps
   {
     hideIcon := TrayIcon_GetInfo(tIcon)
@@ -55,7 +55,7 @@ for Index, tIcon in HideTrayApps
 
 
 ;截屏键
-PrintScreen::Run %ComSpec% /c ""D:\Program Files\eZ IMG\FSCapture\FSCLoader.exe" "Ctrl+PrtSC"",,Hide  ；修改为自己本地 FSCLoader.exe 程序的路径
+PrintScreen::Run %ComSpec% /c ""D:\Program Files\eZ IMG\FSCapture\FSCLoader.exe" "Ctrl+PrtSC"",,Hide  ; 修改为自己本地 FSCLoader.exe 程序的路径
 Return
 
 
