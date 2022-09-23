@@ -111,7 +111,7 @@ Tip(s:="") {
 			wingetpos, x, y, w, h, % v2rayNCls  ; 首次启动会自动调整 v2rayN 的窗口位置与尺寸
 			;msgbox, %x%`n%y%`n%w%`n%h%
 			if (%h% != 1088) {
-				WinMove, % v2rayNCls,,842,28,1088,
+				WinMove, % v2rayNCls,,842,28,1088,  ; 这里修改成自己想要的位置和尺寸
 			}
 			WinGet, hWnd, ID, % v2rayNCls
 			oAcc := Acc_Get("Object", "4.3.4.1.4.1.4.1.4.1.4.1.4", 0, "ahk_id " hWnd)
