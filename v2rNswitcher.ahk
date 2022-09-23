@@ -1,7 +1,7 @@
-﻿; 作者 -Z-
+; 作者 -Z-
 ; 日期 2022.9.24  趋近完善
-；地址：https://github.com/921j/ICO/blob/main/v2rNswitcher.ahk
-；引用、转载、修改时请勿去掉源地址，谢谢！
+; 地址：https://github.com/921j/ICO/blob/main/v2rNswitcher.ahk
+; 引用、转载、修改时请勿去掉源地址，谢谢！
 ; 获取权限
 Loop, %0% ; For each parameter:
   {
