@@ -1,4 +1,4 @@
-﻿; 作者 -Z-
+; 作者 -Z-
 ; 日期 2022.9.24  趋近完善
 ; 地址：https://github.com/921j/ICO/blob/main/v2rNswitcher.ahk
 ; 引用、转载、修改时请勿去掉源地址，谢谢！
@@ -111,11 +111,13 @@ Tip(s:="") {
 			}
 			WinGet, hWnd, ID, % v2rayNCls
 			oAcc := Acc_Get("Object", "4.3.4.1.4.1.4.1.4.1.4.1.4", 0, "ahk_id " hWnd)
-			if (oAcc.AccSelection = "")
-			  oAcc.AccDoDefaultAction(1)
+      if (oAcc.AccSelection = "")
+        oAcc.AccDoDefaultAction(1)
 			send, ^a
 			send, ^t
 			sleep 1000
+      LastIdx := oAcc.accChildCount -1
+      /*
       Loop
       {
         if (oAcc.accName(A_Index) = "")
@@ -126,6 +128,7 @@ Tip(s:="") {
 				}
 			}
       WaitRes:
+      */
       Loop
       {
         result := ""
