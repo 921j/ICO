@@ -111,7 +111,8 @@ Tip(s:="") {
 			}
 			WinGet, hWnd, ID, % v2rayNCls
 			oAcc := Acc_Get("Object", "4.3.4.1.4.1.4.1.4.1.4.1.4", 0, "ahk_id " hWnd)
-			oAcc.AccDoDefaultAction(1)
+			if (oAcc.AccSelection = "")
+			  oAcc.AccDoDefaultAction(1)
 			send, ^a
 			send, ^t
 			sleep 1000
