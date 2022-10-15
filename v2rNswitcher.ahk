@@ -1,5 +1,5 @@
-﻿; 作者 -Z-
-; 日期 2022.9.24  趋近完善
+; 作者 -Z-
+; 日期 2022.10.15  趋近完善
 ; 地址：https://github.com/921j/ICO/blob/main/v2rNswitcher.ahk
 ; 引用、转载、修改时请勿去掉源地址，谢谢！
 ; 获取权限
@@ -30,7 +30,7 @@ if not A_IsAdmin
 ;Process Priority,,High
 ListLines, Off
 SetWorkingDir, %A_ScriptDir%
-SetCapsLockState, AlwaysOff
+;SetCapsLockState, AlwaysOff        ; 关闭 CapsLock 功能
 SetBatchLines, -1
 SetKeyDelay, -1, -1
 SetMouseDelay, -1
@@ -87,10 +87,9 @@ Tip(s:="") {
 	v2rayNPid = %ErrorLevel%
 	IfWinNotExist, ahk_pid %v2rayNPid%
 	{
-		Run "D:\zNet\v2rayN-Core\v2rayN.exe",,Hide  ; 这里替换 v2rayN 程序路径
+		Run "D:\zNet\v2rayN-Core\v2rayN.exe",,Hide
 		sleep 3000
 		MsgBox, 48, , 看起来 v2rayN 并未运行 已为您运行 v2rayN.`n若想继续测速请再按一次 Ctrl+F1., 5
-    return
 	}
 	Else
 	{
@@ -104,10 +103,10 @@ Tip(s:="") {
       Winshow, % v2rayNCls
       Winactivate, % v2rayNCls
       WinWaitActive, % v2rayNCls
-			wingetpos, x, y, w, h, % v2rayNCls  ; 首次启动会自动调整 v2rayN 的窗口位置与尺寸
+			wingetpos, x, y, w, h, % v2rayNCls
 			;msgbox, %x%`n%y%`n%w%`n%h%
 			if (%h% != 1088) {
-				WinMove, % v2rayNCls,,842,28,1088,  ; 这里修改成自己想要的位置和尺寸
+				WinMove, % v2rayNCls,,842,28,1088,
 			}
 			WinGet, hWnd, ID, % v2rayNCls
 			oAcc := Acc_Get("Object", "4.3.4.1.4.1.4.1.4.1.4.1.4", 0, "ahk_id " hWnd)
@@ -119,14 +118,14 @@ Tip(s:="") {
 			send, ^a
 			send, ^t
 			sleep 1000
-      LastIdx := oAcc.accChildCount -1
+			LastIdx := oAcc.accChildCount -1
       Loop
       {
         result := ""
         result .= oAcc.accDescription(LastIdx)
-        if ((Sift_Regex(result, "测试结果","OC") != "") && (Sift_Regex(result, "∞|测速中","REGEX") = ""))
+        If InStr(result, "测试结果",,90) && Not InStr(result, "测速中",,90) && Not InStr(result, "∞",,90)
         {
-					sleep 2000
+					 sleep 1000
           goto GetVal
         }
       }
@@ -135,20 +134,19 @@ Tip(s:="") {
       {
         result := ""
         result .= oAcc.accDescription(A_Index)
-        if (Sift_Regex(result, "\d+\.\d\s+M\/s$","REGEX") != "")
+        If InStr(result, "M/s", true, 100)
 				{
-					result1 := Sift_Regex(result, "\d+\.\d\s+M\/s$","REGEX")
-					RegExMatch(result1, "\d+\.\d(?=\s+M\/s$)", vnumb)
-					if (vnumb > maxv){
-						maxv := vnumb
-						maxi := A_Index
+					 RegExMatch(result, "\d+\.\d(?=\s+M\/s$)", vnumb, 100)
+					 if (vnumb > maxv){
+						 maxv := vnumb
+						 maxi := A_Index
 					}
-          ;MsgBox  当前编号:%A_Index%  节点速度:%vnumb% `n选中编号:%maxi%  节点速度:%maxv%
+          MsgBox  当前编号:%A_Index%  节点速度:%vnumb% `n选中编号:%maxi%  节点速度:%maxv%
 				}
       }
       Winactivate, % v2rayNCls
       WinWaitActive, % v2rayNCls
-      sleep 200
+      sleep 500
       if (oAcc.AccFocus != maxi){
         Acc_Get("DoAction", "4.3.4.1.4.1.4.1.4.1.4.1.4", maxi, "ahk_id " hWnd)
         send {enter}
@@ -156,11 +154,12 @@ Tip(s:="") {
 			else {
         MsgBox, 4, , 看起来 v2rayN 已选最优节点.`n点击确定关闭程序界面., 8
           IfMsgBox Yes
-            WinHide, ahk_pid %v2rayNPid%
+            WinHide, % v2rayNCls
 			}
 			oAcc := oRect := ""
-		  Return
+		  return
 		}
+		return
 	}
 return
 
@@ -591,49 +590,4 @@ Acc_Get(Command, ChildPath, ChildId := 0, Target*) {
             out := oAcc["acc" Command](ChildId + 0)
     }
     return out
-}
-
-
-
-Sift_Regex(ByRef Haystack, ByRef Needle, Options := "IN", Delimit := "`n")
-{
-	Sifted := {}
-	if (Options = "IN")		
-		Needle_Temp := "\Q" Needle "\E"
-	else if (Options = "LEFT")
-		Needle_Temp := "^\Q" Needle "\E"
-	else if (Options = "RIGHT")
-		Needle_Temp := "\Q" Needle "\E$"
-	else if (Options = "EXACT")		
-		Needle_Temp := "^\Q" Needle "\E$"
-	else if (Options = "REGEX")
-		Needle_Temp := Needle
-	else if (Options = "OC")
-		Needle_Temp := RegExReplace(Needle,"(.)","\Q$1\E.*")
-	else if (Options = "OW")
-		Needle_Temp := RegExReplace(Needle,"( )","\Q$1\E.*")
-	else if (Options = "UW")
-		Loop, Parse, Needle, " "
-			Needle_Temp .= "(?=.*\Q" A_LoopField "\E)"
-	else if (Options = "UC")
-		Loop, Parse, Needle
-			Needle_Temp .= "(?=.*\Q" A_LoopField "\E)"
-
-	if Options is lower
-		Needle_Temp := "i)" Needle_Temp
-	
-	if IsObject(Haystack)
-	{
-		for key, Hay in Haystack
-			if RegExMatch(Hay, Needle_Temp)
-				Sifted.Insert(Hay)
-	}
-	else
-	{
-		Loop, Parse, Haystack, %Delimit%
-			if RegExMatch(A_LoopField, Needle_Temp)
-				Sifted .= A_LoopField Delimit
-		Sifted := SubStr(Sifted,1,-1)
-	}
-	return Sifted
 }
