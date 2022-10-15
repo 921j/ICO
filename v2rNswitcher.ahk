@@ -141,7 +141,7 @@ Tip(s:="") {
 						 maxv := vnumb
 						 maxi := A_Index
 					}
-          MsgBox  当前编号:%A_Index%  节点速度:%vnumb% `n选中编号:%maxi%  节点速度:%maxv%
+          ;MsgBox  当前编号:%A_Index%  节点速度:%vnumb% `n选中编号:%maxi%  节点速度:%maxv%
 				}
       }
       Winactivate, % v2rayNCls
